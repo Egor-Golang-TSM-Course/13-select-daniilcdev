@@ -2,7 +2,7 @@ package main
 
 import (
 	cookingsim "lesson12/cooking-sim"
-	network "lesson12/restourant-network"
+	network "lesson12/restaurant-network"
 	"time"
 )
 

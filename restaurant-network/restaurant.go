@@ -24,6 +24,6 @@ func (r *restaurant) open(workDay <-chan struct{}, reports chan<- int64) {
 
 func (r *restaurant) endOfDayReport(report chan<- int64) {
 	r.sales = int64(rand.Int63() % 100)
-	fmt.Printf("%s sold %d\n", r.name, r.sales)
+	fmt.Printf("%s submitted report: sales during day - %d\n", r.name, r.sales)
 	report <- r.sales
 }
