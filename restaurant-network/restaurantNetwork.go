@@ -6,7 +6,7 @@ import (
 
 type mainOffice struct {
 	workDay     chan struct{}
-	reports     chan int64
+	reports     chan *restaurant
 	restaurants []restaurant
 }
 
@@ -17,7 +17,7 @@ func RunNetwork(eod <-chan struct{}) {
 
 	mo := mainOffice{
 		workDay:     make(chan struct{}),
-		reports:     make(chan int64, nRestaurants),
+		reports:     make(chan *restaurant, nRestaurants),
 		restaurants: make([]restaurant, 0, nRestaurants),
 	}
 
@@ -34,13 +34,13 @@ func RunNetwork(eod <-chan struct{}) {
 func (mo *mainOffice) close() {
 	var sum int64 = 0
 
-	for _, r := range mo.restaurants {
+	for range mo.restaurants {
 		mo.workDay <- struct{}{}
 
-		s := <-mo.reports
-		sum += s
+		r := <-mo.reports
+		sum += r.sales
 
-		fmt.Printf("report received : %s sold %d\n", r.name, s)
+		fmt.Printf("report received : %s sold %d\n", r.name, r.sales)
 	}
 
 	fmt.Println("restaurant network stopped, total sales:", sum)
