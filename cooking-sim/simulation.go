@@ -17,6 +17,7 @@ func StartCooking(eod <-chan struct{}) {
 		c := &Chef{Name: name, CookingTime: time.Duration(100<<10 + (rand.Uint32() % 200))}
 		go c.Cook(done)
 	}
+
 	for {
 		select {
 		case <-eod:
@@ -27,6 +28,7 @@ func StartCooking(eod <-chan struct{}) {
 			}
 
 			fmt.Println("restourant closed")
+			return
 		default:
 			continue
 		}

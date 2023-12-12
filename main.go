@@ -2,6 +2,7 @@ package main
 
 import (
 	cookingsim "lesson12/cooking-sim"
+	network "lesson12/restourant-network"
 	"time"
 )
 
@@ -13,5 +14,13 @@ func main() {
 
 	eod <- struct{}{}
 
-	time.Sleep(1 * time.Second)
+	time.Sleep(time.Second)
+
+	go network.RunNetwork(eod)
+
+	time.Sleep(10 * time.Second)
+
+	eod <- struct{}{}
+
+	time.Sleep(time.Second)
 }
