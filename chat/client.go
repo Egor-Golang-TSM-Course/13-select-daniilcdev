@@ -21,18 +21,24 @@ func (cl *client) enterChat(uuid string, send chan<- *envelop) {
 	go func() {
 		defer func() {
 			if recover() != nil {
-				fmt.Println("error: connection closed")
+				fmt.Println("error recovered: connection closed")
 			}
 		}()
 
-		msg := fmt.Sprintf("Hi! My name is %s and I've sent this message at %v", cl.name, time.Now().Format(time.UnixDate))
+		for {
+			msg := fmt.Sprintf("Hi! My name is %s and I've sent this message at %v", cl.name, time.Now().Format(time.UnixDate))
 
-		send <- &envelop{
-			uuid: uuid,
-			msg:  msg,
+			select {
+			case send <- &envelop{
+				uuid: uuid,
+				msg:  msg,
+			}:
+			default:
+				return
+			}
+
+			time.Sleep(time.Duration(1000<<10 + (1000 + rand.Int63()%1000)))
 		}
-
-		time.Sleep(time.Duration(1000<<10 + (100 + rand.Int63()%1000)))
 	}()
 
 	<-cl.connClosed
